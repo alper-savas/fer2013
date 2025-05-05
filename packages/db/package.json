@@ -1,0 +1,23 @@
+{
+  "name": "db",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "main": "index.ts",
+  "types": "index.ts",
+  "scripts": {
+    "migrate:dev": "npx dotenv -e ../../.env -- npx prisma migrate dev",
+    "studio": "npx dotenv -e ../../.env -- npx prisma studio"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.3",
+    "dotenv-cli": "^8.0.0",
+    "prisma": "^6.7.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.802.0",
+    "@prisma/client": "^6.7.0"
+  }
+}
