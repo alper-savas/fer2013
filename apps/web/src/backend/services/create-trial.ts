@@ -1,11 +1,17 @@
 "use server";
 
 import prisma from "@fer-app/db/prisma";
+import { AutomationLevel } from "./enums";
 
-export async function createTrial() {
+export async function createTrial({ automationLevel }: { automationLevel: AutomationLevel }) {
   const trial = await prisma.trial.create({
-    data: {},
+    data: {
+      automationLevel,
+    },
   });
 
-  return trial.id;
+  return {
+    id: trial.id,
+    createdAt: trial.createdAt,
+  };
 }

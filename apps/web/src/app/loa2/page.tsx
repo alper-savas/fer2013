@@ -4,6 +4,8 @@ import { motion, easeInOut } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
+import { createTrial } from "@/backend/services";
+import { AutomationLevel } from "@/backend/services/enums";
 
 export default function LOA2() {
     const router = useRouter();
@@ -77,7 +79,7 @@ export default function LOA2() {
                                                 <li>You will complete 20 rounds of facial expression classification</li>
                                                 <li>Each round will present 6 different facial expression images from the FER2013 dataset</li>
                                             </ul>
-                                            
+
                                             <p className="mt-4">After completing this trial:</p>
                                             <ul className="list-disc list-inside space-y-2 ml-4">
                                                 <li>You will answer ResQue questions to provide feedback about your experience</li>
@@ -90,7 +92,10 @@ export default function LOA2() {
 
                             <div className="pt-4 flex flex-row justify-end">
                                 <Button
-                                    onClick={() => router.push("/loa2/trial")}
+                                    onClick={async () => {
+                                        const trial = await createTrial({ automationLevel: AutomationLevel.LOA2 });
+                                        router.push(`/loa2/${trial.id}`);
+                                    }}
                                     className="bg-[#0D1117]/50 hover:bg-[#1C2128]/50 text-white text-base p-6 rounded-md transition-colors duration-300 hover:cursor-pointer border border-slate-500/60"
                                 >
                                     I Understand - Start Trial

@@ -4,9 +4,12 @@ import { motion, easeInOut } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
+import { createTrial } from "@/backend/services";
 
 export default function LOA1() {
     const router = useRouter();
+
+
 
     return (
         <div className="relative max-w-3xl mx-auto p-8 space-y-2 mt-8">
@@ -64,8 +67,10 @@ export default function LOA1() {
                                         <li>Complete the classification based purely on your judgment</li>
                                     </ul>
                                     <p className="mt-4 text-slate-400">
-                                        This represents the baseline configuration where all subtasks are assigned to the human operator,
-                                        establishing a foundation for comparing different levels of automation in the emotion recognition task.
+                                        This represents the baseline configuration where all subtasks are assigned to the user,
+                                        establishing a foundation for comparing different levels of automation in the emotion
+                                        recognition task. What you have to do is to select the image that shows a different emotion
+                                        from the others first and then click on the "Confirm Selection" button to proceed to the next question.
                                     </p>
 
                                     <div className="mt-6 space-y-4">
@@ -89,7 +94,10 @@ export default function LOA1() {
 
                             <div className="pt-4 flex flex-row justify-end">
                                 <Button
-                                    onClick={() => router.push("/loa1/trial")}
+                                    onClick={async () => {
+                                        const trial = await createTrial();
+                                        router.push(`/loa1/trial/${trial.id}`);
+                                    }}
                                     className="bg-[#0D1117]/50 hover:bg-[#1C2128]/50 text-white text-base p-6 rounded-md transition-colors duration-300 hover:cursor-pointer border border-slate-500/60"
                                 >
                                     I Understand - Start Trial
