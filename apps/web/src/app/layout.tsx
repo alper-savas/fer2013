@@ -1,21 +1,33 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "@/styles/globals.css";
 import { Copyright } from "lucide-react";
+import { Lato } from 'next/font/google';
+import { Toaster } from "sonner";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+const lato = Lato({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['400', '700', '900'],
+})
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "FER App | Find the Outlier",
   description: "FER App",
+  icons: {
+    icon: [
+      {
+        url: "/favicon.ico",
+        sizes: "any",
+      },
+    ],
+    apple: [
+      {
+        url: "/favicon.ico",
+        sizes: "any",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
@@ -28,7 +40,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${lato.className} antialiased`}
       >
         <div className="min-h-screen bg-[#0A0A0A] relative overflow-hidden">
           {/* Background Elements */}
@@ -40,6 +52,7 @@ export default function RootLayout({
           {/* Main Content */}
           <main className="relative">
             {children}
+            <Toaster />
           </main>
 
           {/* Copyright Footer */}

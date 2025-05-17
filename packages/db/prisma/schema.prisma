@@ -9,38 +9,45 @@ datasource db {
 }
 
 model Trial {
-    id               String          @id @default(uuid())
-    createdAt        DateTime        @default(now())
-    updatedAt        DateTime        @updatedAt
-    acceptedFalse    Int             @default(0)
-    acceptedTrue     Int             @default(0)
+    id         String    @id @default(uuid())
+    createdAt  DateTime  @default(now())
+    updatedAt  DateTime  @updatedAt
+    finishedAt DateTime?
+
     automationLevel  AutomationLevel @default(LOA1)
-    correctAnswers   Int             @default(0)
     currentRound     Int             @default(1)
-    falsePredictions Int             @default(0)
     duration         Int?
-    finishedAt       DateTime?
-    incorrectAnswers Int             @default(0)
-    rejectedFalse    Int             @default(0)
-    rejectedTrue     Int             @default(0)
-    resQue           ResQue?
+    falsePredictions Int             @default(0)
+
+    correctAnswers   Int @default(0)
+    incorrectAnswers Int @default(0)
+
+    acceptedTrue  Int @default(0) // Number of correct classifications accepted
+    acceptedFalse Int @default(0) // Number of incorrect classifications accepted
+    rejectedFalse Int @default(0) // Number of incorrect classifications rejected
+    rejectedTrue  Int @default(0) // Number of correct classifications rejected
+
+    resQue ResQue?
 }
 
 model Image {
     id        Int      @id @default(autoincrement())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    url       String?  @unique
-    label     Label?
+
+    url   String? @unique
+    label Label?
 }
 
 model ResQue {
     id        String   @id @default(uuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    items     Json     @default("[]")
-    trialId   String   @unique
-    trial     Trial    @relation(fields: [trialId], references: [id])
+
+    items Json @default("[]")
+
+    trialId String @unique
+    trial   Trial  @relation(fields: [trialId], references: [id])
 }
 
 enum AutomationLevel {

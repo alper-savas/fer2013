@@ -1,70 +1,32 @@
 "use client";
 
-import {
-  UserCircle2,
-  CircleDot,
-  ListFilter,
-  CheckCircle2,
-  Timer,
-  ChevronLeft,
-} from "lucide-react";
+import { InfoPopover } from "@/components/ui/info-popover";
 import { motion, easeInOut } from "framer-motion";
+import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { automationLevels } from "@/app/data";
+
+const renderAutomationDots = (level: number) => {
+  return (
+    <div className="flex gap-1.5">
+      {[2, 3, 4, 5].map((dot) => (
+        <div
+          key={dot}
+          className={`h-2 w-2 rounded-full ${dot <= level
+            ? 'bg-blue-500'
+            : 'bg-slate-700'
+            }`}
+        />
+      ))}
+    </div>
+  );
+};
 
 export default function Main() {
   const router = useRouter();
-  const automationLevels = [
-    {
-      label: "Level of Automation 1: Fully Manual Classification",
-      route: "/loa1",
-      description: "Find the outlier emotion independently, without any system assistance.",
-      icon: UserCircle2,
-      automationLevel: 1,
-    },
-    {
-      label: "Level of Automation 2: Assisted Classification",
-      route: "/loa2",
-      description: "System recommends possible outliers while you make the final decision.",
-      icon: CircleDot,
-      automationLevel: 2,
-    },
-    {
-      label: "Level of Automation 3: Ranked Classification",
-      route: "/loa3",
-      description: "Choose from a system-generated ranked list of potential outliers.",
-      icon: ListFilter,
-      automationLevel: 3,
-    },
-    {
-      label: "Level of Automation 4-5: Ranked / Validated Classification",
-      route: "/loa4-5",
-      description: "Review and confirm the system's pre-selected outlier choice.",
-      icon: CheckCircle2,
-      automationLevel: 4,
-    },
-    {
-      label: "Level of Automation 6: Automated Classification with Veto",
-      route: "/loa6",
-      description: "System identifies the outlier with option for quick override.",
-      icon: Timer,
-      automationLevel: 5,
-    },
-  ];
 
-  const renderAutomationDots = (level: number) => {
-    return (
-      <div className="flex gap-1.5">
-        {[2, 3, 4, 5].map((dot) => (
-          <div
-            key={dot}
-            className={`h-2 w-2 rounded-full ${dot <= level
-              ? 'bg-blue-500'
-              : 'bg-slate-700'
-              }`}
-          />
-        ))}
-      </div>
-    );
+  const handleTrialRedirect = () => {
+    router.push("/trial");
   };
 
   return (
@@ -81,12 +43,33 @@ export default function Main() {
           Find the Outlier Image
         </h1>
         <p className="text-slate-400 text-xl max-w-2xl mx-auto">
-          Choose how you'd like to identify the outlier emotion among the image sets based on the level of automation.
+          Click start trial button to begin identifying the outlier emotion among the set of images based on the level of automation.
         </p>
       </motion.div>
 
+      {/* Prominent Trial Button */}
+      <div className="sticky top-4 z-10 flex justify-center my-6">
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            delay: 0.2,
+            duration: 0.4,
+            ease: easeInOut
+          }}
+        >
+          <Button
+            onClick={handleTrialRedirect}
+            className="bg-blue-600 text-white font-medium px-8 py-4 rounded-lg text-lg hover:bg-blue-700 shadow-sm transition-all duration-200 hover:cursor-pointer"
+            size="lg"
+          >
+            Start Trial →
+          </Button>
+        </motion.div>
+      </div>
+
       {/* Automation Levels Container */}
-      <div className="space-y-4 pt-8">
+      <div className="space-y-4 pt-2">
         {automationLevels.map((level, index) => {
           const Icon = level.icon;
           return (
@@ -99,10 +82,10 @@ export default function Main() {
                 duration: 0.35,
                 ease: easeInOut
               }}
-              className="group relative bg-white/[0.03] backdrop-blur-sm rounded-xl overflow-hidden border border-slate-800/30 hover:border-blue-300/50 transition-all duration-500 hover:cursor-pointer hover:scale-[1.005]"
-              onClick={() => router.push(level.route)}
+              className="group relative bg-white/[0.03] backdrop-blur-sm rounded-xl overflow-hidden border border-slate-800/30 transition-all duration-500"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-transparent opacity-0 transition-opacity duration-300" />
               <div className="relative p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
@@ -114,11 +97,18 @@ export default function Main() {
                       {renderAutomationDots(level.automationLevel)}
                     </div>
                   </div>
+                  <InfoPopover
+                    title={level.popoverContent.title}
+                    description={level.popoverContent.description}
+                    details={level.popoverContent.details}
+                    interaction={level.popoverContent.interaction}
+                    emotions={["Anger", "Fear", "Happiness", "Sadness", "Surprise", "Neutral"]}
+                  />
                 </div>
 
                 <div className="space-y-3">
                   <div
-                    className="w-full bg-slate-800/30 group-hover:bg-slate-700/30 text-white text-lg py-6 px-6 rounded-lg transition-all duration-300 text-left"
+                    className="w-full bg-slate-800/30 text-white text-lg py-6 px-6 rounded-lg transition-all duration-300 text-left"
                   >
                     {level.label.split(":")[0]}
                     <span className="block text-sm text-slate-400 font-normal mt-1">

@@ -1,0 +1,8 @@
+export { createTrial } from "./functions/create-trial";
+export { getTrial } from "./functions/get-trial";
+export { getImages } from "./functions/get-images";
+export { answerTrialQuestion } from "./functions/answer-trial-question";
+export { submitResque } from "./functions/submit-resque";
+export { classifyEmotions } from "./functions/classify-emotions";
+export { incrementFalsePredictions } from "./functions/increment-false-predictions";
+export { getNumberOfTrials } from "./functions/get-number-of-trials";
