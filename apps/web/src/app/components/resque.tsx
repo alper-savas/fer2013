@@ -24,10 +24,9 @@ const formSchema = z.object({
     generalTrust3: z.string().min(1, "Please answer this question"),
 
     // Automation-Specific Trust - these are conditionally required based on automation level
-    autoTrust1: z.string().optional(),
-    autoTrust2: z.string().optional(),
-    autoTrust3: z.string().optional(),
-    autoTrust4: z.string().optional(),
+    autoTrust1: z.string().min(1, "Please answer this question"),
+    autoTrust2: z.string().min(1, "Please answer this question"),
+    autoTrust3: z.string().min(1, "Please answer this question"),
 
     // Confidence and Reliance
     confidence1: z.string().min(1, "Please answer this question"),
@@ -35,11 +34,18 @@ const formSchema = z.object({
     confidence3: z.string().min(1, "Please answer this question"),
 
     // Perceived Accuracy and Bias
-    accuracy1: z.string().min(1, "Please answer this question"),
-    accuracy2: z.string().min(1, "Please answer this question"),
-    accuracy3: z.string().min(1, "Please answer this question"),
+    accuracyAndBias1: z.string().min(1, "Please answer this question"),
+    accuracyAndBias2: z.string().min(1, "Please answer this question"),
+    accuracyAndBias3: z.string().min(1, "Please answer this question"),
+    accuracyAndBias4: z.string().min(1, "Please answer this question"),
+    accuracyAndBias5: z.string().min(1, "Please answer this question"),
+    accuracyAndBias6: z.string().min(1, "Please answer this question"),
+
+    // Usefulness
+    usefulness1: z.string().min(1, "Please answer this question"),
+    usefulness2: z.string().min(1, "Please answer this question"),
+    usefulness3: z.string().min(1, "Please answer this question"),
 }).refine((data) => {
-    // Additional validation based on automation level
     return true;
 }, {
     message: "Please complete all required questions",
@@ -59,19 +65,24 @@ const questionMap = {
     generalTrust2: "I trusted the system to make accurate decisions about which image was the outlier.",
     generalTrust3: "I felt comfortable relying on the system to assist me in this task.",
 
-    autoTrust1: "The order in which the images were presented made it easier for me to trust the system's suggestions.",
-    autoTrust2: "I trusted the system's preselected image to be the correct outlier.",
-    autoTrust3: "I felt the system's locked choice was reliable, even if I didn't change it.",
-    autoTrust4: "I preferred making the decision myself without the system's input because I didn't trust it to help.",
+    autoTrust1: "The way the images were presented made it easier for me to trust the system's recommendations.",
+    autoTrust2: "I trusted the system's recommendations to be the correct outlier.",
+    autoTrust3: "I preferred making the decision relying on the system's output rather than my own judgment.",
 
-    confidence1: "I felt more certain of my choices when the system provided assistance.",
-    confidence2: "I would rely on this system if I had to perform this task again.",
-    confidence3: "The system's involvement made me question my own judgment less.",
+    confidence1: "I would rely on this system if I had to perform this task again.",
+    confidence2: "The system's involvement made me question my own judgment less.",
+    confidence3: "I felt more confident in my choices when the system's recommendations were the same as my own.",
 
-    accuracy1: "I believe the system accurately identified the outlier most of the time.",
-    accuracy2: "I found myself agreeing with the system's suggestions even when I wasn't sure they were correct.",
-    accuracy3: "I felt pressured to accept the system's choice in this version.",
+    accuracyAndBias1: "I believe the system accurately identified the outlier most of the time.",
+    accuracyAndBias2: "I found myself agreeing with the system's recommendations even when I wasn't sure they were correct.",
+    accuracyAndBias3: "I felt pressured to accept the system's output.",
+    accuracyAndBias4: "I accepted the system's recommendations without thoroughly reviewing them myself.",
+    accuracyAndBias5: "I felt inclined to agree with the system's choice even when I had doubts about its accuracy.",
+    accuracyAndBias6: "The system's recommendations influenced my decisions more than my own judgment.",
 
+    usefulness1: "The system was useful in helping me identify the correct outlier image.",
+    usefulness2: "Using the system made the task of finding the outlier image more efficient.",
+    usefulness3: "I found the system's recommendations valuable for completing this task accurately.",
 };
 
 export function Resque({ trialId, automationLevel }: ResqueProps) {
@@ -87,13 +98,18 @@ export function Resque({ trialId, automationLevel }: ResqueProps) {
             autoTrust1: "",
             autoTrust2: "",
             autoTrust3: "",
-            autoTrust4: "",
             confidence1: "",
             confidence2: "",
             confidence3: "",
-            accuracy1: "",
-            accuracy2: "",
-            accuracy3: "",
+            accuracyAndBias1: "",
+            accuracyAndBias2: "",
+            accuracyAndBias3: "",
+            accuracyAndBias4: "",
+            accuracyAndBias5: "",
+            accuracyAndBias6: "",
+            usefulness1: "",
+            usefulness2: "",
+            usefulness3: "",
         },
         mode: "onChange",
     });
@@ -107,31 +123,11 @@ export function Resque({ trialId, automationLevel }: ResqueProps) {
         // Basic required fields for all automation levels
         const requiredFields = [
             "generalTrust1", "generalTrust2", "generalTrust3",
+            "autoTrust1", "autoTrust2", "autoTrust3",
             "confidence1", "confidence2", "confidence3",
-            "accuracy1", "accuracy2", "accuracy3",
+            "accuracyAndBias1", "accuracyAndBias2", "accuracyAndBias3", "accuracyAndBias4", "accuracyAndBias5", "accuracyAndBias6",
+            "usefulness1", "usefulness2", "usefulness3",
         ];
-
-        // Add automation-specific fields
-        let automationSpecificField = "";
-        switch (automationLevel) {
-            case AutomationLevel.LOA1:
-                automationSpecificField = "autoTrust4";
-                break;
-            case AutomationLevel.LOA2:
-                automationSpecificField = "autoTrust1";
-                break;
-            case AutomationLevel.LOA3:
-                automationSpecificField = "autoTrust2";
-                break;
-            case AutomationLevel.LOA4_5:
-                automationSpecificField = "autoTrust3";
-                break;
-        }
-
-        if (automationSpecificField) {
-            requiredFields.push(automationSpecificField);
-        }
-
         // Check if all required fields are filled
         const allFieldsFilled = requiredFields.every(field => {
             const value = values[field as keyof ResqueFormValues];
@@ -143,7 +139,6 @@ export function Resque({ trialId, automationLevel }: ResqueProps) {
             hasErrors,
             automationLevel,
             requiredFields,
-            automationSpecificField
         });
 
         return allFieldsFilled && !hasErrors;
@@ -186,10 +181,7 @@ export function Resque({ trialId, automationLevel }: ResqueProps) {
             await submitResque({ trialId, answers: resqueItems });
             setIsSubmitted(true);
 
-            // Redirect after 3 seconds
-            setTimeout(() => {
-                router.push("/");
-            }, 3000);
+            // Removed the redirect logic
         } catch (error) {
             console.error("Error submitting answers:", error);
             toast.error("Error submitting your answers. Please try again.");
@@ -200,34 +192,17 @@ export function Resque({ trialId, automationLevel }: ResqueProps) {
     function renderLikertQuestion(
         name: keyof ResqueFormValues,
         question: string,
-        showFor?: AutomationLevel
     ) {
-        // If showFor is specified, only show the question for that automation level
-        if (showFor !== undefined && automationLevel !== showFor) {
-            return null;
-        }
-
         // Determine if this field is required based on automation level
         const isRequired = () => {
             // General fields are always required
             if (name.startsWith('generalTrust') ||
+                name.startsWith('autoTrust') ||
                 name.startsWith('confidence') ||
-                name.startsWith('accuracy')) {
+                name.startsWith('accuracy') ||
+                name.startsWith('autoBias') ||
+                name.startsWith('usefulness')) {
                 return true;
-            }
-
-            // Check automation-specific fields
-            switch (name) {
-                case 'autoTrust1':
-                    return automationLevel === AutomationLevel.LOA2;
-                case 'autoTrust2':
-                    return automationLevel === AutomationLevel.LOA3;
-                case 'autoTrust3':
-                    return automationLevel === AutomationLevel.LOA4_5;
-                case 'autoTrust4':
-                    return automationLevel === AutomationLevel.LOA1;
-                default:
-                    return false;
             }
         };
 
@@ -377,22 +352,14 @@ export function Resque({ trialId, automationLevel }: ResqueProps) {
                                     {renderLikertQuestion(
                                         "autoTrust1",
                                         questionMap.autoTrust1,
-                                        AutomationLevel.LOA2
                                     )}
                                     {renderLikertQuestion(
                                         "autoTrust2",
                                         questionMap.autoTrust2,
-                                        AutomationLevel.LOA3
                                     )}
                                     {renderLikertQuestion(
                                         "autoTrust3",
                                         questionMap.autoTrust3,
-                                        AutomationLevel.LOA4_5
-                                    )}
-                                    {renderLikertQuestion(
-                                        "autoTrust4",
-                                        questionMap.autoTrust4,
-                                        AutomationLevel.LOA1
                                     )}
                                 </div>
 
@@ -419,16 +386,46 @@ export function Resque({ trialId, automationLevel }: ResqueProps) {
                                         Perceived Accuracy and Bias
                                     </h3>
                                     {renderLikertQuestion(
-                                        "accuracy1",
-                                        questionMap.accuracy1
+                                        "accuracyAndBias1",
+                                        questionMap.accuracyAndBias1
                                     )}
                                     {renderLikertQuestion(
-                                        "accuracy2",
-                                        questionMap.accuracy2
+                                        "accuracyAndBias2",
+                                        questionMap.accuracyAndBias2
                                     )}
                                     {renderLikertQuestion(
-                                        "accuracy3",
-                                        questionMap.accuracy3
+                                        "accuracyAndBias3",
+                                        questionMap.accuracyAndBias3
+                                    )}
+                                    {renderLikertQuestion(
+                                        "accuracyAndBias4",
+                                        questionMap.accuracyAndBias4
+                                    )}
+                                    {renderLikertQuestion(
+                                        "accuracyAndBias5",
+                                        questionMap.accuracyAndBias5
+                                    )}
+                                    {renderLikertQuestion(
+                                        "accuracyAndBias6",
+                                        questionMap.accuracyAndBias6
+                                    )}
+                                </div>
+
+                                <div className="bg-slate-800/30 backdrop-blur-sm rounded-xl p-6 border border-slate-700/50 shadow-lg">
+                                    <h3 className="text-xl font-semibold text-blue-400 mb-4">
+                                        Usefulness
+                                    </h3>
+                                    {renderLikertQuestion(
+                                        "usefulness1",
+                                        questionMap.usefulness1
+                                    )}
+                                    {renderLikertQuestion(
+                                        "usefulness2",
+                                        questionMap.usefulness2
+                                    )}
+                                    {renderLikertQuestion(
+                                        "usefulness3",
+                                        questionMap.usefulness3
                                     )}
                                 </div>
 
@@ -482,7 +479,7 @@ export function Resque({ trialId, automationLevel }: ResqueProps) {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.6, duration: 0.3 }}
                     >
-                        Redirecting you to the homepage...
+                        Your feedback has been submitted. You can now close this page.
                     </motion.p>
                 </motion.div>
             )}
