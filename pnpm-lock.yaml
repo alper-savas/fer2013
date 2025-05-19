@@ -18,6 +18,16 @@ importers:
         specifier: 5.8.2
         version: 5.8.2
 
+  apps/fast-api:
+    dependencies:
+      '@fer-app/db':
+        specifier: workspace:^
+        version: link:../../packages/db
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.8.3
+
   apps/web:
     dependencies:
       '@aws-sdk/client-s3':

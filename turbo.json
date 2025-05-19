@@ -5,8 +5,13 @@
         "^build"
       ],
       "outputs": [
-        ".next/**",
-        "!.next/cache/**"
+        "apps/web/.next/**",
+        "packages/db/dist/**"
+      ]
+    },
+    "start": {
+      "dependsOn": [
+        "^build"
       ]
     },
     "dev": {
