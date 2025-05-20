@@ -1,20 +1,29 @@
+"use client";
+
 import { getNumberOfTrials } from "@/backend/functions/get-number-of-trials";
 import { LOA1, LOA2, LOA3, LOA45, LOA6 } from "@/app/components/info";
+import { useState, useEffect } from "react";
 
-export default async function TrialPage() {
-    const numberOfTrials = await getNumberOfTrials();
+const LOA_COMPONENTS = {
+    0: LOA1,
+    1: LOA2,
+    2: LOA3,
+    3: LOA45,
+    4: LOA6,
+} as const;
+
+export default function TrialPage() {
+    const [numberOfTrials, setNumberOfTrials] = useState(0);
     const currentLoa = numberOfTrials % 5;
+    const CurrentLOAComponent = LOA_COMPONENTS[currentLoa as keyof typeof LOA_COMPONENTS];
 
-    if (currentLoa === 0) {
-        return <LOA1 />;
-    } else if (currentLoa === 1) {
-        return <LOA2 />;
-    } else if (currentLoa === 2) {
-        return <LOA3 />;
-    } else if (currentLoa === 3) {
-        return <LOA45 />;
-    } else if (currentLoa === 4) {
-        return <LOA6 />;
-    }
+    useEffect(() => {
+        const fetchNumberOfTrials = async () => {
+            const count = await getNumberOfTrials();
+            setNumberOfTrials(count);
+        };
+        fetchNumberOfTrials();
+    }, []);
 
+    return <CurrentLOAComponent />;
 }
