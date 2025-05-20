@@ -19,6 +19,9 @@ RUN pnpm install --frozen-lockfile
 # Run Prisma migrations from packages/db
 RUN pnpm --filter @fer-app/db run migrate:dev
 
+ARG DATABASE_URL
+ENV DATABASE_URL=${DATABASE_URL}
+
 # Build the web app inside apps/web
 RUN pnpm --filter web run build
 
