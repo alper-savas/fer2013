@@ -34,5 +34,11 @@ COPY . .
 # Set the working directory to the FastAPI app
 WORKDIR /app/apps/fast-api
 
+# Force CPU usage
+ENV CUDA_VISIBLE_DEVICES="-1"
+
+# Expose port 8000
+EXPOSE 8000
+
 # Command to run the application
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
