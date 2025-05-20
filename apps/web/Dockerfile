@@ -5,7 +5,7 @@ FROM node:18-alpine
 WORKDIR /app
 
 # Install pnpm globally
-RUN npm install -g pnpm
+RUN npm install -g pnpm@8.14.0
 
 # Copy all files including packages and apps directories
 COPY . .
