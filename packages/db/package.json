@@ -7,7 +7,10 @@
   "types": "index.ts",
   "scripts": {
     "migrate:dev": "npx dotenv -e ../../.env -- npx prisma migrate dev",
-    "studio": "npx dotenv -e ../../.env -- npx prisma studio"
+    "studio": "npx dotenv -e ../../.env -- npx prisma studio",
+    "build": "npx prisma generate",
+    "start": "npx prisma migrate deploy"
+    
   },
   "devDependencies": {
     "@types/node": "^22.15.3",

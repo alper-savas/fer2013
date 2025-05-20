@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion, easeInOut } from "framer-motion";
 import { ListFilter } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -23,6 +23,11 @@ type LOA3ComponentProps = {
 export function LOA3Component({ id, currentRound, imageObject, falsePrediction }: LOA3ComponentProps) {
     const router = useRouter();
     const [selectedImage, setSelectedImage] = useState<ImageObject | null>(null);
+
+    // Reset selectedImage when imageObject changes (new question loads)
+    useEffect(() => {
+        setSelectedImage(null);
+    }, [imageObject]);
 
     // Sort images by outlier probability (highest to lowest)
     const sortedImages = useMemo(() => {
