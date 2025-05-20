@@ -54,3 +54,4 @@ async function seedImages() {
   }
 }
 
+seedImages().catch(console.error).finally(() => prisma.$disconnect());
