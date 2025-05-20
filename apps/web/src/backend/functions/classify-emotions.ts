@@ -32,12 +32,18 @@ export async function classifyEmotions(imageUrls: string[]): Promise<EmotionData
                     const blob = new Blob([imageBuffer], { type: 'image/jpeg' });
                     formData.append("file", blob, "image.jpg");
 
+                    console.log(formData);
+                    console.log(`Attempting to classify emotion for ${imageUrl}`);
+                    console.log(`Using FastAPI URL: ${fastApiUrl}`);
+
                     const classification = await axios.post(
                         `${fastApiUrl}/classify-emotion/`,
                         formData,
                         {
                             headers: { "Content-Type": "multipart/form-data" },
-                            timeout: 30000 // 30 second timeout
+                            timeout: 60000, // Increased to 60 seconds
+                            maxContentLength: Infinity,
+                            maxBodyLength: Infinity
                         }
                     );
 
