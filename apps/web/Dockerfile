@@ -11,7 +11,7 @@ COPY packages ./packages
 RUN npm install -g pnpm
 
 # Install all dependencies for monorepo
-RUN pnpm install --frozen-lockfile
+RUN npm install -g pnpm@8.14.0
 
 # OPTIONAL: Run DB migrations before building web app
 # Adjust command based on how you run prisma migrate in your monorepo
