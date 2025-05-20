@@ -19,21 +19,8 @@ RUN pnpm install --frozen-lockfile
 # Run Prisma migrations from packages/db
 RUN pnpm --filter @fer-app/db run migrate:dev
 
-# Run Prisma seed from packages/db
-RUN pnpm --filter @fer-app/db run seed
-
-
 ARG DATABASE_URL
-ARG AWS_ACCESS_KEY_ID
-ARG AWS_SECRET_ACCESS_KEY
-ARG AWS_S3_BUCKET
-ARG AWS_REGION
-
 ENV DATABASE_URL=${DATABASE_URL}
-ENV AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-ENV AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-ENV AWS_S3_BUCKET=${AWS_S3_BUCKET}
-ENV AWS_REGION=${AWS_REGION}
 
 # Build the web app inside apps/web
 RUN pnpm --filter web run build
