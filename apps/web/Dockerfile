@@ -1,27 +1,32 @@
-FROM node:20-alpine
+# Use Node.js 18 official image (LTS)
+FROM node:18-alpine
 
+# Set working directory to /app (root of your monorepo)
 WORKDIR /app
-
-# Copy necessary files/folders
-COPY package.json pnpm-lock.yaml ./
-COPY apps ./apps
-COPY packages ./packages
 
 # Install pnpm globally
 RUN npm install -g pnpm
 
-# Install all dependencies for monorepo
-RUN npm install -g pnpm@8.14.0
+# Copy all files including packages and apps directories
+COPY . .
 
-# OPTIONAL: Run DB migrations before building web app
-# Adjust command based on how you run prisma migrate in your monorepo
+# Copy .env explicitly if needed for migrations
+COPY .env ./
+
+# Install all dependencies hoisted at root
+RUN pnpm install --frozen-lockfile
+
+# Run Prisma migrations from packages/db
 RUN pnpm --filter @fer-app/db run migrate:dev
 
-# Build web app
+# Build the web app inside apps/web
 RUN pnpm --filter web run build
 
-# Expose the port your app uses
+# Expose port (adjust if needed)
 EXPOSE 3000
 
-# Start the web app
-CMD ["pnpm", "--filter", "web", "run", "start"]
+# Set working directory to the web app to run it
+WORKDIR /app/apps/web
+
+# Start the Next.js app
+CMD ["pnpm", "start"]
