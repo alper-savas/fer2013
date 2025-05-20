@@ -19,6 +19,9 @@ RUN pnpm install --frozen-lockfile
 # Run Prisma migrations from packages/db
 RUN pnpm --filter @fer-app/db run migrate:dev
 
+# Run Prisma seed from packages/db
+RUN pnpm --filter @fer-app/db run seed
+
 ARG DATABASE_URL
 ENV DATABASE_URL=${DATABASE_URL}
 
