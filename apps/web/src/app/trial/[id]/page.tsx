@@ -31,7 +31,16 @@ export default async function TrialPage({ params }: { params: Promise<{ id: stri
     const { currentRound, automationLevel, falsePredictions } = trial;
 
     // Process image classification
-    const classificationResults = await classifyEmotions(images.map(image => image.path));
+    let classificationResults;
+    try {
+        classificationResults = await classifyEmotions(images.map(image => image.path));
+    } catch (error) {
+        return (
+            <div className="fixed bottom-4 right-4 bg-red-500 text-white px-6 py-4 rounded-lg shadow-lg">
+                Error processing images. Please refresh the page.
+            </div>
+        );
+    }
 
     // Calculate outlier probabilities
     const outlierProbabilities = calculateOutlierProbabilities(
