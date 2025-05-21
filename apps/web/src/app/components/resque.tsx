@@ -279,6 +279,7 @@ export function Resque({ trialId, automationLevel }: ResqueProps) {
         );
     }
 
+
     // Main return statement with styled form
     return (
         <div className="max-w-4xl mx-auto p-8">

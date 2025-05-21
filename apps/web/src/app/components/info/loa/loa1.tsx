@@ -114,7 +114,7 @@ export default function LOA1() {
                                             <h3 className="text-xl font-semibold text-white">How to interact with the system:</h3>
                                             <div className="space-y-3 text-slate-400">
                                                 <ul className="list-disc list-inside space-y-2 ml-4">
-                                                    <li>For each round, review all 6 facial expressions</li>
+                                                    <li>For each round, review all 6 facial expressions. 5 of them are the same emotion, but one is different.</li>
                                                     <li>Select the image that shows a different emotion from the others</li>
                                                     <li>Click on the "Confirm Selection" button to proceed to the next question</li>
                                                     <li>You must select and confirm your choice to proceed to the next round</li>

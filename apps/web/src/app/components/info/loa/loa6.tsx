@@ -116,7 +116,8 @@ export default function LOA6() {
                                             <h3 className="text-xl font-semibold text-white">How to interact with the system:</h3>
                                             <div className="space-y-3 text-slate-400">
                                                 <ul className="list-disc list-inside space-y-2 ml-4">
-                                                    <li>For each round, the system will automatically select an outlier</li>
+                                                    <li>For each round, review all 6 facial expressions. 5 of them are the same emotion, but one is different.</li>
+                                                    <li>The system will automatically select an outlier</li>
                                                     <li>A countdown timer will appear, during which you can veto the system's decision</li>
                                                     <li>If you disagree with the selection, click the "Veto" button within the time window</li>
                                                     <li>After vetoing, select a different image and confirm your selection</li>

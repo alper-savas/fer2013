@@ -116,7 +116,7 @@ export default function LOA3() {
                                             <h3 className="text-xl font-semibold text-white">How to interact with the system:</h3>
                                             <div className="space-y-3 text-slate-400">
                                                 <ul className="list-disc list-inside space-y-2 ml-4">
-                                                    <li>For each round, review all 6 facial expressions</li>
+                                                    <li>For each round, review all 6 facial expressions. 5 of them are the same emotion, but one is different.</li>
                                                     <li>The system will arrange images from highest to lowest probability of being the outlier</li>
                                                     <li>Click on the image you believe contains the outlier emotion</li>
                                                     <li>Confirm your selection by clicking the "Confirm Selection" button</li>

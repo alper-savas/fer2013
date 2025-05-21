@@ -116,7 +116,7 @@ export default function LOA45() {
                                             <h3 className="text-xl font-semibold text-white">How to interact with the system:</h3>
                                             <div className="space-y-3 text-slate-400">
                                                 <ul className="list-disc list-inside space-y-2 ml-4">
-                                                    <li>For each round, review all 6 facial expressions</li>
+                                                    <li>For each round, review all 6 facial expressions. 5 of them are the same emotion, but one is different.</li>
                                                     <li>The system will rank images and preselect the top-ranked image as the recommended outlier</li>
                                                     <li>Accept the system's recommendation or select a different image</li>
                                                     <li>Confirm your selection by clicking the "Confirm Selection" button</li>

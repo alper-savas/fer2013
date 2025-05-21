@@ -1,5 +1,5 @@
 import { LOA1Component, LOA2Component, LOA3Component, LOA45Component, LOA6Component } from "./components";
-import { getTrial, getImages, classifyEmotions, incrementFalsePredictions } from "@/backend";
+import { getTrial, getImages, classifyEmotions } from "@/backend";
 import { notFound, redirect } from "next/navigation";
 import { ImageObject, OutlierProbability } from "@/backend/types";
 import {
@@ -12,6 +12,7 @@ import {
 import { AutomationLevel } from "@/backend/enums";
 import { ImageData } from "@/backend/types";
 import { Resque } from "@/app/components/resque";
+import { CheckCircle2 } from "lucide-react";
 
 export default async function TrialPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -71,6 +72,20 @@ export default async function TrialPage({ params }: { params: Promise<{ id: stri
  * Renders the final rescue screen at the end of the trial
  */
 function RenderResqueScreen({ trialId, automationLevel }: { trialId: string; automationLevel: AutomationLevel }) {
+    // For LOA1, show completion screen directly
+    if (automationLevel === AutomationLevel.LOA1) {
+        return (
+            <div className="flex flex-col items-center justify-center h-[60vh]">
+                <div className="flex flex-col items-center space-y-6">
+                    <CheckCircle2 className="h-24 w-24 text-green-500" strokeWidth={1.5} />
+                    <h2 className="text-2xl font-bold text-white">Trial Completed!</h2>
+                    <p className="text-slate-400">You have completed this trial. You can now close this page.</p>
+                </div>
+            </div>
+        );
+    }
+
+    // For other automation levels, show the Resque questionnaire
     return (
         <div className="resque-container">
             <Resque trialId={trialId} automationLevel={automationLevel} />
