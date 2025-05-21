@@ -50,13 +50,13 @@ export default function RootLayout({
           <div className="absolute h-[1000px] w-[1000px] rounded-full bg-purple-500/15 blur-[120px] -bottom-[400px] -left-[400px]" />
 
           {/* Main Content */}
-          <main className="relative">
+          <main className="relative mb-12">
             {children}
             <Toaster />
           </main>
 
           {/* Copyright Footer */}
-          <div className="border-t border-slate-800/50 mt-12 pt-8 pb-8">
+          {/* <div className="border-t border-slate-800/50 mt-12 pt-8 pb-8">
             <div className="flex items-center justify-center gap-2 text-sm text-slate-500">
               <Copyright className="h-4 w-4" />
               <span>{currentYear}</span>
@@ -64,7 +64,7 @@ export default function RootLayout({
               <span className="text-slate-600">•</span>
               <span>All rights reserved</span>
             </div>
-          </div>
+          </div> */}
         </div>
       </body>
     </html>
