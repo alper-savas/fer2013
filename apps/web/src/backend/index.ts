@@ -6,3 +6,4 @@ export { submitResque } from "./functions/submit-resque";
 export { classifyEmotions } from "./functions/classify-emotions";
 export { incrementFalsePredictions } from "./functions/increment-false-predictions";
 export { getNumberOfTrials } from "./functions/get-number-of-trials";
+export { getTrialAccuracy } from "./functions/get-trial-accuracy";

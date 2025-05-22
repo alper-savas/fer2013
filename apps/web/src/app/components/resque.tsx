@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { motion, easeInOut } from "framer-motion";
-import { UserCircle2, CheckCircle2 } from "lucide-react";
+import { UserCircle2, CheckCircle2, ChevronLeft, ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -14,6 +14,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { AutomationLevel, ResQueLevel } from "@/backend/enums";
 import { ResQueItem } from "@/backend/types";
 import { submitResque } from "@/backend";
+import { automationLevels } from "@/app/data";
 
 // Define form schema with validation
 const formSchema = z.object({
@@ -56,6 +57,7 @@ type ResqueFormValues = z.infer<typeof formSchema>;
 type ResqueProps = {
     trialId: string;
     automationLevel: AutomationLevel;
+    accuracy: number | undefined;
 };
 
 // Map of questions for each field
@@ -84,7 +86,7 @@ const questionMap = {
     usefulness3: "I found the system's recommendations valuable for completing this task accurately.",
 };
 
-export function Resque({ trialId, automationLevel }: ResqueProps) {
+export function Resque({ trialId, automationLevel, accuracy }: ResqueProps) {
     const router = useRouter();
     const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -282,7 +284,7 @@ export function Resque({ trialId, automationLevel }: ResqueProps) {
 
     // Main return statement with styled form
     return (
-        <div className="max-w-4xl mx-auto p-8">
+        <div className="max-w-7xl mx-auto p-12">
             {!isSubmitted ? (
                 <>
                     <motion.div
@@ -452,11 +454,25 @@ export function Resque({ trialId, automationLevel }: ResqueProps) {
                     </motion.div>
                 </>
             ) : (
+                <ResqueFinished accuracy={accuracy} />
+            )}
+        </div>
+    );
+}
+
+export const ResqueFinished = ({ accuracy }: { accuracy?: number }) => {
+    const [currentScreen, setCurrentScreen] = useState(0);
+
+    const screens = [
+        // Screen 1: Completion and Accuracy
+        {
+            content: (
                 <motion.div
-                    className="flex flex-col items-center justify-center h-[60vh]"
-                    initial={{ opacity: 0, scale: 0.5 }}
+                    className="flex flex-col items-center justify-center"
+                    initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5, ease: easeInOut }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.4, ease: "easeOut" }}
                 >
                     <motion.div
                         initial={{ scale: 0.8, opacity: 0 }}
@@ -473,16 +489,255 @@ export function Resque({ trialId, automationLevel }: ResqueProps) {
                     >
                         Thank you for your submission!
                     </motion.h2>
-                    <motion.p
-                        className="text-slate-400 mt-2"
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.6, duration: 0.3 }}
-                    >
-                        Your feedback has been submitted. You can now close this page.
-                    </motion.p>
+                    {accuracy !== undefined && (
+                        <motion.div
+                            className="mt-6 p-8 bg-slate-800/30 backdrop-blur-sm rounded-xl border border-slate-700/50"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.6, duration: 0.4 }}
+                        >
+                            <h3 className="text-xl font-semibold text-blue-400 mb-4">Your Performance</h3>
+                            <div className="flex items-center justify-center">
+                                <motion.div
+                                    className="relative w-40 h-40"
+                                    initial={{ rotate: -90 }}
+                                    animate={{ rotate: 0 }}
+                                    transition={{ delay: 0.8, duration: 0.6, type: "spring" }}
+                                >
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <motion.span
+                                            className="text-4xl font-bold text-white"
+                                            initial={{ opacity: 0, scale: 0.5 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            transition={{ delay: 1.2, duration: 0.3 }}
+                                        >
+                                            {Math.round(accuracy * 100)}%
+                                        </motion.span>
+                                    </div>
+                                    <svg className="transform -rotate-90 w-40 h-40">
+                                        <circle
+                                            cx="80"
+                                            cy="80"
+                                            r="70"
+                                            className="stroke-slate-700/30"
+                                            strokeWidth="8"
+                                            fill="transparent"
+                                        />
+                                        <motion.circle
+                                            cx="80"
+                                            cy="80"
+                                            r="70"
+                                            className="stroke-blue-500"
+                                            strokeWidth="8"
+                                            fill="transparent"
+                                            strokeDasharray={`${accuracy * 440} 440`}
+                                            initial={{ pathLength: 0 }}
+                                            animate={{ pathLength: accuracy }}
+                                            transition={{ delay: 0.8, duration: 1, ease: "easeOut" }}
+                                        />
+                                    </svg>
+                                </motion.div>
+                            </div>
+                            <motion.p
+                                className="text-slate-400 text-center mt-6"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 1.4, duration: 0.3 }}
+                            >
+                                This represents your accuracy in identifying outlier images during the trial.
+                            </motion.p>
+                        </motion.div>
+                    )}
                 </motion.div>
-            )}
+            )
+        },
+        // Screen 2: Study Information
+        {
+            content: (
+                <motion.div
+                    className="flex flex-col items-center justify-center h-full max-h-[calc(100vh-160px)]"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.4, ease: "easeOut" }}
+                >
+                    <motion.h2
+                        className="text-3xl font-bold text-white mb-8"
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                    >
+                        About the System
+                    </motion.h2>
+                    <motion.div
+                        className="bg-slate-800/30 backdrop-blur-sm rounded-xl border border-slate-700/50 p-8 w-full max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-800/30"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2, duration: 0.5 }}
+                    >
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.4, duration: 0.3 }}
+                        >
+                            <h3 className="text-xl font-semibold text-blue-400 mb-4">System Objectives</h3>
+                            <div className="space-y-3">
+                                <p className="text-slate-300 leading-relaxed">
+                                    The system is designed to help operators identify outliers in a set of images.
+                                </p>
+                                <ul className="list-disc list-inside space-y-2 text-slate-300 pl-4">
+                                    <li className="leading-relaxed">
+                                        Analyze patterns of misuse due to overreliance and disuse, when operators fail to detect erroneous system recommendations across different automation levels
+                                    </li>
+                                    <li className="leading-relaxed">
+                                        Define boundaries where automation enhances or detracts from decision-making
+                                    </li>
+                                    <li className="leading-relaxed">
+                                        Investigate the correlation between operator trust and system performance, especially focusing on accuracy
+                                    </li>
+                                </ul>
+                            </div>
+                        </motion.div>
+
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.6, duration: 0.3 }}
+                            className="mt-8"
+                        >
+                            <h3 className="text-xl font-semibold text-blue-400 mb-4">System Configurations</h3>
+                            <div className="space-y-4">
+                                <div className="bg-slate-800/50 rounded-lg p-4">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <div className="flex gap-1.5">
+                                            {[1, 2, 3, 4].map((dot) => (
+                                                <div key={dot} className="h-2 w-2 rounded-full bg-slate-700" />
+                                            ))}
+                                        </div>
+                                        <span className="text-white font-medium">{automationLevels[0].label}</span>
+                                    </div>
+                                    <p className="text-slate-300 text-sm leading-relaxed">
+                                        {automationLevels[0].popoverContent.description}
+                                    </p>
+                                </div>
+
+                                <div className="bg-slate-800/50 rounded-lg p-4">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <div className="flex gap-1.5">
+                                            {[1].map((dot) => (
+                                                <div key={dot} className="h-2 w-2 rounded-full bg-blue-500" />
+                                            ))}
+                                            {[2, 3, 4].map((dot) => (
+                                                <div key={dot} className="h-2 w-2 rounded-full bg-slate-700" />
+                                            ))}
+                                        </div>
+                                        <span className="text-white font-medium">{automationLevels[1].label}</span>
+                                    </div>
+                                    <p className="text-slate-300 text-sm leading-relaxed">
+                                        {automationLevels[1].popoverContent.description}
+                                    </p>
+                                </div>
+
+                                <div className="bg-slate-800/50 rounded-lg p-4">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <div className="flex gap-1.5">
+                                            {[1, 2].map((dot) => (
+                                                <div key={dot} className="h-2 w-2 rounded-full bg-blue-500" />
+                                            ))}
+                                            {[3, 4].map((dot) => (
+                                                <div key={dot} className="h-2 w-2 rounded-full bg-slate-700" />
+                                            ))}
+                                        </div>
+                                        <span className="text-white font-medium">{automationLevels[2].label}</span>
+                                    </div>
+                                    <p className="text-slate-300 text-sm leading-relaxed">
+                                        {automationLevels[2].popoverContent.description}
+                                    </p>
+                                </div>
+
+                                <div className="bg-slate-800/50 rounded-lg p-4">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <div className="flex gap-1.5">
+                                            {[1, 2, 3].map((dot) => (
+                                                <div key={dot} className="h-2 w-2 rounded-full bg-blue-500" />
+                                            ))}
+                                            {[4].map((dot) => (
+                                                <div key={dot} className="h-2 w-2 rounded-full bg-slate-700" />
+                                            ))}
+                                        </div>
+                                        <span className="text-white font-medium">{automationLevels[3].label}</span>
+                                    </div>
+                                    <p className="text-slate-300 text-sm leading-relaxed">
+                                        {automationLevels[3].popoverContent.description}
+                                    </p>
+                                </div>
+
+                                <div className="bg-slate-800/50 rounded-lg p-4">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <div className="flex gap-1.5">
+                                            {[1, 2, 3, 4].map((dot) => (
+                                                <div key={dot} className="h-2 w-2 rounded-full bg-blue-500" />
+                                            ))}
+                                        </div>
+                                        <span className="text-white font-medium">{automationLevels[4].label}</span>
+                                    </div>
+                                    <p className="text-slate-300 text-sm leading-relaxed">
+                                        {automationLevels[4].popoverContent.description}
+                                    </p>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                </motion.div>
+            )
+        }
+    ];
+
+    return (
+        <div className="flex flex-col items-center min-h-screen relative px-4">
+            {/* Main Content with Scroll Container */}
+            <div className="w-full overflow-y-auto">
+                {screens[currentScreen].content}
+            </div>
+
+            {/* Fixed Navigation Controls */}
+            <motion.div
+                className="fixed bottom-8 left-1/2 -translate-x-1/2 flex justify-center items-center space-x-6 bg-gradient-to-t from-black/50 to-transparent py-4 px-8 rounded-xl"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8, duration: 0.3 }}
+            >
+                <motion.button
+                    onClick={() => setCurrentScreen(prev => Math.max(0, prev - 1))}
+                    disabled={currentScreen === 0}
+                    className="text-slate-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors duration-200"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                >
+                    <ChevronLeft className="h-8 w-8" />
+                </motion.button>
+                <div className="flex space-x-3">
+                    {screens.map((_, index) => (
+                        <motion.div
+                            key={index}
+                            className={`w-2.5 h-2.5 rounded-full transition-colors duration-300 ${index === currentScreen ? 'bg-blue-500' : 'bg-slate-600/50'
+                                }`}
+                            whileHover={{ scale: 1.2 }}
+                            onClick={() => setCurrentScreen(index)}
+                            style={{ cursor: 'pointer' }}
+                        />
+                    ))}
+                </div>
+                <motion.button
+                    onClick={() => setCurrentScreen(prev => Math.min(screens.length - 1, prev + 1))}
+                    disabled={currentScreen === screens.length - 1}
+                    className="text-slate-400 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors duration-200"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                >
+                    <ChevronRight className="h-8 w-8" />
+                </motion.button>
+            </motion.div>
         </div>
     );
-}
+};

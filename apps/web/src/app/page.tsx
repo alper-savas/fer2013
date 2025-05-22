@@ -30,46 +30,48 @@ export default function Main() {
   };
 
   return (
-    <div className="relative max-w-3xl mx-auto p-8 space-y-2 mt-8">
+    <div className="relative max-w-3xl mx-auto p-8 space-y-2 min-h-screen flex flex-col justify-center overflow-hidden h-screen">
 
       {/* Header Section */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.3, ease: easeInOut }}
-        className="text-center flex flex-col items-center justify-center gap-2"
-      >
-        <h1 className="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60 py-1">
-          Find the Outlier Image
-        </h1>
-        <p className="text-slate-400 text-xl max-w-2xl mx-auto">
-          Click start trial button to begin identifying the outlier emotion among the set of images based on the level of automation.
-        </p>
-      </motion.div>
-
-      {/* Prominent Trial Button */}
-      <div className="sticky top-4 z-10 flex justify-center my-6">
+      <div className="-translate-y-24">
         <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
-            delay: 0.2,
-            duration: 0.4,
-            ease: easeInOut
-          }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3, ease: easeInOut }}
+          className="text-center flex flex-col items-center justify-center gap-2 mb-12"
         >
-          <Button
-            onClick={handleTrialRedirect}
-            className="bg-blue-600 text-white font-medium px-8 py-4 rounded-lg text-lg hover:bg-blue-700 shadow-sm transition-all duration-200 hover:cursor-pointer"
-            size="lg"
-          >
-            Start Trial →
-          </Button>
+          <h1 className="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60 py-1">
+            Find the Outlier Image
+          </h1>
+          <p className="text-slate-400 text-xl max-w-2xl mx-auto">
+            Click start trial button to begin identifying the outlier emotion among the set of images based on the level of automation.
+          </p>
         </motion.div>
+
+        {/* Prominent Trial Button */}
+        <div className="sticky top-4 z-10 flex justify-center my-6">
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              delay: 0.2,
+              duration: 0.4,
+              ease: easeInOut
+            }}
+          >
+            <Button
+              onClick={handleTrialRedirect}
+              className="bg-gradient-to-r from-blue-600 to-blue-500 text-white font-semibold px-12 py-6 rounded-md text-xl hover:from-blue-700 hover:to-blue-600 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgb(59,130,246,0.3)] transition-all duration-300 hover:cursor-pointer hover:scale-[1.02] active:scale-[0.98] backdrop-blur-sm"
+              size="lg"
+            >
+              Start Trial →
+            </Button>
+          </motion.div>
+        </div>
       </div>
 
       {/* Automation Levels Container */}
-      <div className="space-y-4 pt-2">
+      {/* <div className="space-y-4 pt-2">
         {automationLevels.map((level, index) => {
           const Icon = level.icon;
           return (
@@ -123,7 +125,7 @@ export default function Main() {
             </motion.div>
           );
         })}
-      </div>
+      </div> */}
     </div>
   );
 }

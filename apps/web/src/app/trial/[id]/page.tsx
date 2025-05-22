@@ -11,12 +11,14 @@ import {
 
 import { AutomationLevel } from "@/backend/enums";
 import { ImageData } from "@/backend/types";
-import { Resque } from "@/app/components/resque";
-import { CheckCircle2 } from "lucide-react";
+import { Resque, ResqueFinished } from "@/app/components/resque";
+import { getTrialAccuracy } from "@/backend";
 
 export default async function TrialPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
     let falsePrediction = false;
+    const accuracy = await getTrialAccuracy({ trialId: id });
+
 
     // Fetch trial and images data in parallel
     const [trial, images] = await Promise.all([
@@ -66,7 +68,7 @@ export default async function TrialPage({ params }: { params: Promise<{ id: stri
 
     // Render appropriate screen based on current round
     return currentRound === 21
-        ? <RenderResqueScreen trialId={id} automationLevel={automationLevel} />
+        ? <RenderResqueScreen trialId={id} automationLevel={automationLevel} accuracy={accuracy?.accuracy} />
         : <RenderTrialScreen
             id={id}
             currentRound={currentRound}
@@ -80,25 +82,19 @@ export default async function TrialPage({ params }: { params: Promise<{ id: stri
 /**
  * Renders the final rescue screen at the end of the trial
  */
-function RenderResqueScreen({ trialId, automationLevel }: { trialId: string; automationLevel: AutomationLevel }) {
+function RenderResqueScreen({ trialId, automationLevel, accuracy }: { trialId: string; automationLevel: AutomationLevel, accuracy: number | undefined }) {
     // For LOA1, show completion screen directly
     if (automationLevel === AutomationLevel.LOA1) {
         return (
-            <div className="flex flex-col items-center justify-center h-[60vh]">
-                <div className="flex flex-col items-center space-y-6">
-                    <CheckCircle2 className="h-24 w-24 text-green-500" strokeWidth={1.5} />
-                    <h2 className="text-2xl font-bold text-white">Trial Completed!</h2>
-                    <p className="text-slate-400">You have completed this trial. You can now close this page.</p>
-                </div>
+            <div className="flex flex-col items-center justify-center h-screen max-w-7xl mx-auto my-12">
+                <ResqueFinished accuracy={accuracy} />
             </div>
         );
     }
 
     // For other automation levels, show the Resque questionnaire
     return (
-        <div className="resque-container">
-            <Resque trialId={trialId} automationLevel={automationLevel} />
-        </div>
+        <Resque trialId={trialId} automationLevel={automationLevel} accuracy={accuracy} />
     );
 }
 
