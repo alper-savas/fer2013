@@ -60,14 +60,8 @@ export default function LOA1() {
                     </div>
 
                     <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60 py-1">
-                        Level of Automation 1
+                        Fully Manual Classification
                     </h1>
-
-                    <div className="flex items-center justify-center space-x-2">
-                        <p className="text-slate-400 text-xl">
-                            Fully Manual Classification
-                        </p>
-                    </div>
                 </div>
             </motion.div>
 

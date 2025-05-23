@@ -64,7 +64,7 @@ export const automationLevels = [
             ],
             interaction: [
                 "For each round, review all 6 facial expressions",
-                "The system will arrange images from highest to lowest probability of being the outlier",
+                "The system displays images along a green-to-red gradient, with colors and order corresponding to the probability of being an outlier, from highest to lowest.",
                 "Click on the image you believe contains the outlier emotion",
                 "Confirm your selection by clicking the 'Confirm Selection' button"
             ]
@@ -87,7 +87,8 @@ export const automationLevels = [
             ],
             interaction: [
                 "For each round, review all 6 facial expressions",
-                "The system will rank images and preselect the top-ranked image as the recommended outlier",
+                "The system displays images along a green-to-red gradient, with colors and order corresponding to the probability of being an outlier, from highest to lowest.",
+                "The system will preselect the top-ranked image as the recommended outlier",
                 "Accept the system's recommendation or select a different image",
                 "Confirm your selection by clicking the 'Confirm Selection' button"
             ]
@@ -110,6 +111,8 @@ export const automationLevels = [
             ],
             interaction: [
                 "For each round, the system will automatically select an outlier",
+                "The system displays images along a green-to-red gradient, with colors and order corresponding to the probability of being an outlier, from highest to lowest.",
+                "The system will preselect the top-ranked image as the recommended outlier",
                 "A countdown timer will appear, during which you can veto the system's decision",
                 "If you disagree with the selection, click the 'Veto' button within the time window",
                 "After vetoing, select a different image and confirm your selection"
@@ -163,7 +166,7 @@ export const loaInfoLoa3 = {
     ],
     interaction: [
         "For each round, review all 6 facial expressions",
-        "The system will arrange images from highest to lowest probability of being the outlier",
+        "The system displays images along a green-to-red gradient, with colors and order corresponding to the probability of being an outlier, from highest to lowest.",
         "Click on the image you believe contains the outlier emotion",
         "Confirm your selection by clicking the 'Confirm Selection' button"
     ]
@@ -180,7 +183,8 @@ export const loaInfoLoa45 = {
     ],
     interaction: [
         "For each round, review all 6 facial expressions",
-        "The system will rank images and preselect the top-ranked image as the recommended outlier",
+        "The system displays images along a green-to-red gradient, with colors and order corresponding to the probability of being an outlier, from highest to lowest.",
+        "The system will preselect the top-ranked image as the recommended outlier",
         "Accept the system's recommendation or select a different image",
         "Confirm your selection by clicking the 'Confirm Selection' button"
     ]
@@ -197,6 +201,8 @@ export const loaInfoLoa6 = {
     ],
     interaction: [
         "For each round, the system will automatically select an outlier",
+        "The system displays images along a green-to-red gradient, with colors and order corresponding to the probability of being an outlier, from highest to lowest.",
+        "The system will automatically select an outlier",
         "A countdown timer will appear, during which you can veto the system's decision",
         "If you disagree with the selection, click the 'Veto' button within the time window",
         "After vetoing, select a different image and confirm your selection"

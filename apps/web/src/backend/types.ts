@@ -9,6 +9,7 @@ export type GetTrialOutput = {
     automationLevel: AutomationLevel;
     currentRound?: number;
     falsePredictions?: number;
+    resQueId?: string;
     // correctAnswers?: number;
     // incorrectAnswers?: number;
     // acceptedTrue?: number;

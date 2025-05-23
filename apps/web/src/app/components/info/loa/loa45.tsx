@@ -60,14 +60,8 @@ export default function LOA45() {
                     </div>
 
                     <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60 py-1">
-                        Level of Automation 4-5
+                        Ranked / Validated Classification
                     </h1>
-
-                    <div className="flex items-center justify-center space-x-2">
-                        <p className="text-slate-400 text-xl">
-                            Ranked / Validated Classification
-                        </p>
-                    </div>
                 </div>
             </motion.div>
 
@@ -117,7 +111,8 @@ export default function LOA45() {
                                             <div className="space-y-3 text-slate-400">
                                                 <ul className="list-disc list-inside space-y-2 ml-4">
                                                     <li>For each round, review all 6 facial expressions. 5 of them are the same emotion, but one is different.</li>
-                                                    <li>The system will rank images and preselect the top-ranked image as the recommended outlier</li>
+                                                    <li>The system displays images along a green-to-red gradient, with colors and order corresponding to the probability of being an outlier, from highest to lowest.</li>
+                                                    <li>The system will preselect the top-ranked image as the recommended outlier</li>
                                                     <li>Accept the system's recommendation or select a different image</li>
                                                     <li>Confirm your selection by clicking the "Confirm Selection" button</li>
                                                     <li>You must confirm your choice to proceed to the next round</li>

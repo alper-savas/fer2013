@@ -17,6 +17,9 @@ export async function getTrial({ id }: { id: string }) {
         where: {
             id,
         },
+        include: {
+            resQue: true,
+        }
     });
 
     if (!trial) {
@@ -31,5 +34,6 @@ export async function getTrial({ id }: { id: string }) {
         automationLevel: trial.automationLevel as AutomationLevel,
         currentRound: trial.currentRound ?? undefined,
         falsePredictions: trial.falsePredictions ?? undefined,
+        resQueId: trial.resQue?.id,
     } satisfies GetTrialOutput;
 }

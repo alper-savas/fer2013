@@ -13,6 +13,7 @@ import { AutomationLevel } from "@/backend/enums";
 import { ImageData } from "@/backend/types";
 import { Resque, ResqueFinished } from "@/app/components/resque";
 import { getTrialAccuracy } from "@/backend";
+import { ErrorWithAutoRefresh } from "./components/error-with-auto";
 
 export default async function TrialPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -38,9 +39,7 @@ export default async function TrialPage({ params }: { params: Promise<{ id: stri
         classificationResults = await classifyEmotions(images.map(image => image.path));
     } catch (error) {
         return (
-            <div className="fixed bottom-4 right-4 bg-red-500 text-white px-6 py-4 rounded-lg shadow-lg">
-                Error processing images. Please refresh the page.
-            </div>
+            <ErrorWithAutoRefresh />
         );
     }
 
@@ -68,7 +67,7 @@ export default async function TrialPage({ params }: { params: Promise<{ id: stri
 
     // Render appropriate screen based on current round
     return currentRound === 21
-        ? <RenderResqueScreen trialId={id} automationLevel={automationLevel} accuracy={accuracy?.accuracy} />
+        ? <RenderResqueScreen trialId={id} automationLevel={automationLevel} accuracy={accuracy?.accuracy} resQueId={trial.resQueId} />
         : <RenderTrialScreen
             id={id}
             currentRound={currentRound}
@@ -82,9 +81,9 @@ export default async function TrialPage({ params }: { params: Promise<{ id: stri
 /**
  * Renders the final rescue screen at the end of the trial
  */
-function RenderResqueScreen({ trialId, automationLevel, accuracy }: { trialId: string; automationLevel: AutomationLevel, accuracy: number | undefined }) {
+function RenderResqueScreen({ trialId, automationLevel, accuracy, resQueId }: { trialId: string; automationLevel: AutomationLevel, accuracy: number | undefined, resQueId: string | undefined }) {
     // For LOA1, show completion screen directly
-    if (automationLevel === AutomationLevel.LOA1) {
+    if (automationLevel === AutomationLevel.LOA1 || resQueId) {
         return (
             <div className="flex flex-col items-center justify-center h-screen max-w-7xl mx-auto my-12">
                 <ResqueFinished accuracy={accuracy} />

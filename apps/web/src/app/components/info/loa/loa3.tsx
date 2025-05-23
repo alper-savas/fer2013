@@ -60,14 +60,8 @@ export default function LOA3() {
                     </div>
 
                     <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60 py-1">
-                        Level of Automation 3
+                        Ranked Classification
                     </h1>
-
-                    <div className="flex items-center justify-center space-x-2">
-                        <p className="text-slate-400 text-xl">
-                            Ranked Classification
-                        </p>
-                    </div>
                 </div>
             </motion.div>
 
@@ -117,7 +111,7 @@ export default function LOA3() {
                                             <div className="space-y-3 text-slate-400">
                                                 <ul className="list-disc list-inside space-y-2 ml-4">
                                                     <li>For each round, review all 6 facial expressions. 5 of them are the same emotion, but one is different.</li>
-                                                    <li>The system will arrange images from highest to lowest probability of being the outlier</li>
+                                                    <li>The system displays images along a green-to-red gradient, with colors and order corresponding to the probability of being an outlier, from highest to lowest.</li>
                                                     <li>Click on the image you believe contains the outlier emotion</li>
                                                     <li>Confirm your selection by clicking the "Confirm Selection" button</li>
                                                     <li>You must select and confirm your choice to proceed to the next round</li>

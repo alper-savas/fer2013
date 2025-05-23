@@ -60,14 +60,8 @@ export default function LOA6() {
                     </div>
 
                     <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60 py-1">
-                        Level of Automation 6
+                        Automated Classification with Veto
                     </h1>
-
-                    <div className="flex items-center justify-center space-x-2">
-                        <p className="text-slate-400 text-xl">
-                            Automated Classification with Veto
-                        </p>
-                    </div>
                 </div>
             </motion.div>
 
@@ -117,6 +111,7 @@ export default function LOA6() {
                                             <div className="space-y-3 text-slate-400">
                                                 <ul className="list-disc list-inside space-y-2 ml-4">
                                                     <li>For each round, review all 6 facial expressions. 5 of them are the same emotion, but one is different.</li>
+                                                    <li>The system displays images along a green-to-red gradient, with colors and order corresponding to the probability of being an outlier, from highest to lowest.</li>
                                                     <li>The system will automatically select an outlier</li>
                                                     <li>A countdown timer will appear, during which you can veto the system's decision</li>
                                                     <li>If you disagree with the selection, click the "Veto" button within the time window</li>

@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { motion, easeInOut } from "framer-motion";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { ImageObject } from "@/backend/types";
@@ -31,32 +31,34 @@ export function LOA45Component({ id, currentRound, imageObject, falsePrediction 
 
     // Initialize state - will be updated by useEffect when imageObject changes
     const [selectedImage, setSelectedImage] = useState<ImageObject | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
-    // Reset the selected image to the one with highest outlier probability whenever imageObject changes
+    // Reset states when imageObject changes
     useEffect(() => {
         if (sortedImages.length > 0) {
             setSelectedImage(sortedImages[0]);
         }
+        setIsLoading(false);
     }, [sortedImages, imageObject]);
 
     // Get rank colors based on position (green → yellow → orange → red)
     const getRankColor = (index: number, total: number) => {
         const colors = {
             0: {
-                bg: 'from-emerald-500/40 via-emerald-500/30 to-emerald-400/20',
-                border: 'border-emerald-400/60',
-                glow: 'shadow-emerald-500/25',
-                ring: 'ring-emerald-400/70',
-                selected: 'from-emerald-600/30 via-emerald-400/20 to-emerald-500/25',
-                badge: 'from-emerald-500/90 to-emerald-600/90'
-            },
-            1: {
                 bg: 'from-green-500/40 via-green-500/30 to-green-400/20',
                 border: 'border-green-400/60',
                 glow: 'shadow-green-500/25',
                 ring: 'ring-green-400/70',
                 selected: 'from-green-600/30 via-green-400/20 to-green-500/25',
                 badge: 'from-green-500/90 to-green-600/90'
+            },
+            1: {
+                bg: 'from-lime-500/40 via-lime-500/30 to-lime-400/20',
+                border: 'border-lime-400/60',
+                glow: 'shadow-lime-500/25',
+                ring: 'ring-lime-400/70',
+                selected: 'from-lime-600/30 via-lime-400/20 to-lime-500/25',
+                badge: 'from-lime-500/90 to-lime-600/90'
             },
             2: {
                 bg: 'from-yellow-500/40 via-yellow-500/30 to-yellow-400/20',
@@ -75,12 +77,12 @@ export function LOA45Component({ id, currentRound, imageObject, falsePrediction 
                 badge: 'from-orange-500/90 to-orange-600/90'
             },
             4: {
-                bg: 'from-red-500/40 via-red-500/30 to-red-400/20',
-                border: 'border-red-400/60',
-                glow: 'shadow-red-500/25',
-                ring: 'ring-red-400/70',
-                selected: 'from-red-600/30 via-red-400/20 to-red-500/25',
-                badge: 'from-red-500/90 to-red-600/90'
+                bg: 'from-red-600/40 via-red-600/30 to-red-500/20',
+                border: 'border-red-500/60',
+                glow: 'shadow-red-600/25',
+                ring: 'ring-red-500/70',
+                selected: 'from-red-700/30 via-red-500/20 to-red-600/25',
+                badge: 'from-red-600/90 to-red-700/90'
             }
         };
 
@@ -114,13 +116,29 @@ export function LOA45Component({ id, currentRound, imageObject, falsePrediction 
                     />
                 </div>
 
-                < div >
-                    <h1 className="text-4xl font-bold text-white mb-2" >
-                        Find the Outlier Emotion
-                    </h1>
-                    < p className="text-slate-400" >
-                        Select the image that shows a different emotion from the others
-                    </p>
+                <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+                    <div>
+                        <h1 className="text-4xl font-bold text-white mb-2" >
+                            Find the Outlier Emotion
+                        </h1>
+                        <p className="text-slate-400" >
+                            Select the image that shows a different emotion from the others
+                        </p>
+                    </div>
+
+                    {/* Emotions Info Section */}
+                    <div className="mt-4 inline-block p-3 rounded-lg bg-slate-800/50 backdrop-blur-sm border border-slate-700/50">
+                        <div className="flex flex-wrap gap-2">
+                            {["Anger", "Fear", "Happiness", "Sadness", "Surprise", "Neutral"].map((emotion, index) => (
+                                <span
+                                    key={index}
+                                    className="text-xs px-3 py-1.5 rounded-full bg-slate-700 text-slate-300 font-medium"
+                                >
+                                    {emotion}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </motion.div>
 
@@ -145,32 +163,43 @@ export function LOA45Component({ id, currentRound, imageObject, falsePrediction 
 
                 <div className="flex justify-center" >
                     <Button
-                        disabled={selectedImage === null}
+                        disabled={selectedImage === null || isLoading}
                         className={`
                         bg-gradient-to-r from-blue-600 to-blue-500 text-white text-base p-6 rounded-lg 
                         transition-colors duration-300 ease-in-out
                         shadow-md shadow-blue-500/10
                         hover:from-blue-500 hover:to-blue-400 hover:cursor-pointer
                         hover:shadow-lg hover:shadow-blue-500/20
+                        disabled:opacity-80 disabled:cursor-not-allowed
+                        flex items-center gap-2
                       `}
                         onClick={async () => {
-                            // Find image with highest outlier probability
-                            const highestProbabilityImage = [...imageObject].sort((a, b) =>
-                                b.outlierProbability - a.outlierProbability
-                            )[0];
-
-                            // Check if user selected the highest probability image
-                            const isUserAccepted = selectedImage?.imageId === highestProbabilityImage?.imageId;
-
+                            setIsLoading(true);
                             try {
+                                // Find image with highest outlier probability
+                                const highestProbabilityImage = [...imageObject].sort((a, b) =>
+                                    b.outlierProbability - a.outlierProbability
+                                )[0];
+
+                                // Check if user selected the highest probability image
+                                const isUserAccepted = selectedImage?.imageId === highestProbabilityImage?.imageId;
+
                                 await answerTrialQuestion({ trialId: id, isCorrect: selectedImage?.correct ?? false, falsePrediction, isUserAccepted });
                                 router.push(`/trial/${id}`);
                             } catch (error) {
                                 toast.error("Error answering trial question");
+                                setIsLoading(false);
                             }
                         }}
                     >
-                        {currentRound === TOTAL_ROUNDS ? "Finish" : "Confirm Selection"}
+                        {isLoading ? (
+                            <>
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                                Processing...
+                            </>
+                        ) : (
+                            currentRound === TOTAL_ROUNDS ? "Finish" : "Confirm Selection"
+                        )}
                     </Button>
                 </div>
             </motion.div>

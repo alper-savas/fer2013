@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { motion, easeInOut } from "framer-motion";
-import { CircleDot } from "lucide-react";
+import { CircleDot, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { ImageObject } from "@/backend/types";
@@ -23,10 +23,12 @@ type LOA2ComponentProps = {
 export function LOA2Component({ id, currentRound, imageObject, falsePrediction }: LOA2ComponentProps) {
     const router = useRouter();
     const [selectedImage, setSelectedImage] = useState<ImageObject | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     // Reset selectedImage when imageObject changes (new question)
     useEffect(() => {
         setSelectedImage(null);
+        setIsLoading(false);
     }, [imageObject]);
 
     // Find images to highlight - either the top 3 outliers or random images if correct image is not in top 3
@@ -82,13 +84,29 @@ export function LOA2Component({ id, currentRound, imageObject, falsePrediction }
                     />
                 </div>
 
-                < div >
-                    <h1 className="text-4xl font-bold text-white mb-2" >
-                        Find the Outlier Emotion
-                    </h1>
-                    < p className="text-slate-400" >
-                        Select the image that shows a different emotion from the others
-                    </p>
+                <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+                    <div>
+                        <h1 className="text-4xl font-bold text-white mb-2" >
+                            Find the Outlier Emotion
+                        </h1>
+                        <p className="text-slate-400" >
+                            Select the image that shows a different emotion from the others
+                        </p>
+                    </div>
+
+                    {/* Emotions Info Section */}
+                    <div className="mt-4 inline-block p-3 rounded-lg bg-slate-800/50 backdrop-blur-sm border border-slate-700/50">
+                        <div className="flex flex-wrap gap-2">
+                            {["Anger", "Fear", "Happiness", "Sadness", "Surprise", "Neutral"].map((emotion, index) => (
+                                <span
+                                    key={index}
+                                    className="text-xs px-3 py-1.5 rounded-full bg-slate-700 text-slate-300 font-medium"
+                                >
+                                    {emotion}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </motion.div>
 
@@ -113,15 +131,18 @@ export function LOA2Component({ id, currentRound, imageObject, falsePrediction }
 
                 <div className="flex justify-center" >
                     <Button
-                        disabled={selectedImage === null}
+                        disabled={selectedImage === null || isLoading}
                         className={`
                         bg-gradient-to-r from-blue-600 to-blue-500 text-white text-base p-6 rounded-lg 
                         transition-colors duration-300 ease-in-out
                         shadow-md shadow-blue-500/10
                         hover:from-blue-500 hover:to-blue-400 hover:cursor-pointer
                         hover:shadow-lg hover:shadow-blue-500/20
+                        disabled:opacity-80 disabled:cursor-not-allowed
+                        flex items-center gap-2
                       `}
                         onClick={async () => {
+                            setIsLoading(true);
                             try {
                                 // Find image with highest outlier probability
                                 const highestProbabilityImage = [...imageObject].sort((a, b) =>
@@ -140,10 +161,18 @@ export function LOA2Component({ id, currentRound, imageObject, falsePrediction }
                                 router.push(`/trial/${id}`);
                             } catch (error) {
                                 toast.error("Error answering trial question");
+                                setIsLoading(false);
                             }
                         }}
                     >
-                        {currentRound === TOTAL_ROUNDS ? "Finish" : "Confirm Selection"}
+                        {isLoading ? (
+                            <>
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                                Processing...
+                            </>
+                        ) : (
+                            currentRound === TOTAL_ROUNDS ? "Finish" : "Confirm Selection"
+                        )}
                     </Button>
                 </div>
             </motion.div>

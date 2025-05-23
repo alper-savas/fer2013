@@ -489,6 +489,14 @@ export const ResqueFinished = ({ accuracy }: { accuracy?: number }) => {
                     >
                         Thank you for your submission!
                     </motion.h2>
+                    <motion.p
+                        className="text-slate-400 text-center mt-2"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 1.4, duration: 0.3 }}
+                    >
+                        You may now close this window.
+                    </motion.p>
                     {accuracy !== undefined && (
                         <motion.div
                             className="mt-6 p-8 bg-slate-800/30 backdrop-blur-sm rounded-xl border border-slate-700/50"
