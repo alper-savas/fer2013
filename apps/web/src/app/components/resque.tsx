@@ -135,18 +135,10 @@ export function Resque({ trialId, automationLevel, accuracy }: ResqueProps) {
             return !!value && value.trim() !== "";
         });
 
-        console.log("Form validation check:", {
-            allFieldsFilled,
-            hasErrors,
-            automationLevel,
-            requiredFields,
-        });
-
         return allFieldsFilled && !hasErrors;
     };
 
     async function onSubmit(values: ResqueFormValues) {
-        console.log("onSubmit function called with values:", values);
         try {
             const resqueItems: ResQueItem[] = Object.entries(values).map(([key, value]) => {
                 // Map numeric values to ResQueLevel enum values
@@ -184,7 +176,6 @@ export function Resque({ trialId, automationLevel, accuracy }: ResqueProps) {
 
             // Removed the redirect logic
         } catch (error) {
-            console.error("Error submitting answers:", error);
             toast.error("Error submitting your answers. Please try again.");
         }
     }
@@ -319,7 +310,6 @@ export function Resque({ trialId, automationLevel, accuracy }: ResqueProps) {
                             <form
                                 onSubmit={(e) => {
                                     e.preventDefault();
-                                    console.log("Form submit event prevented");
                                     if (isFormValid()) {
                                         const values = form.getValues();
                                         onSubmit(values);
@@ -482,7 +472,7 @@ export const ResqueFinished = ({ accuracy }: { accuracy?: number }) => {
                         <CheckCircle2 className="h-24 w-24 text-green-500" strokeWidth={1.5} />
                     </motion.div>
                     <motion.h2
-                        className="text-2xl font-bold text-white mt-6"
+                        className="text-2xl font-bold text-white mt-6 text-center"
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.4, duration: 0.3 }}

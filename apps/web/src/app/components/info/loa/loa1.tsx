@@ -146,9 +146,9 @@ export default function LOA1() {
                         </div>
 
                         {/* Footer with button - fixed at bottom */}
-                        <div className="pt-4 flex flex-row justify-between items-center border-t border-slate-700/30">
+                        <div className="pt-4 flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-2 border-t border-slate-700/30">
                             {!hasScrolledToEnd ? (
-                                <div className="flex items-center space-x-2">
+                                <div className="flex items-center space-x-2 w-full sm:w-auto justify-center sm:justify-start">
                                     <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></div>
                                     <p className="text-amber-400 text-sm">
                                         Please scroll to the end to continue
@@ -165,7 +165,7 @@ export default function LOA1() {
                                     </motion.div>
                                 </div>
                             ) : (
-                                <div className="text-green-400 text-sm flex items-center space-x-2">
+                                <div className="text-green-400 text-sm flex items-center space-x-2 w-full sm:w-auto justify-center sm:justify-start">
                                     <div className="w-2 h-2 rounded-full bg-green-500"></div>
                                     <span>Ready to proceed</span>
                                 </div>
@@ -197,7 +197,7 @@ export default function LOA1() {
                                 className={`${hasScrolledToEnd
                                     ? "bg-[#0D1117]/50 hover:bg-[#1C2128] text-white hover:border-blue-400/70"
                                     : "bg-[#0D1117]/30 text-slate-400 cursor-not-allowed"
-                                    } text-base px-6 py-3 rounded-md transition-all duration-300 border border-slate-500/60 cursor-pointer`}
+                                    } text-base px-6 py-3 rounded-md transition-all duration-300 border border-slate-500/60 cursor-pointer w-full sm:w-auto`}
                             >
                                 I Understand - Start Trial
                             </Button>
