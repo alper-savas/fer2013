@@ -15,6 +15,7 @@ import { AutomationLevel, ResQueLevel } from "@/backend/enums";
 import { ResQueItem } from "@/backend/types";
 import { submitResque } from "@/backend";
 import { automationLevels } from "@/app/data";
+import Link from "next/link";
 
 // Define form schema with validation
 const formSchema = z.object({
@@ -546,7 +547,21 @@ export const ResqueFinished = ({ accuracy }: { accuracy?: number }) => {
                             </motion.p>
                         </motion.div>
                     )}
+                    <motion.div
+                        className="text-center mt-8"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 1.4, duration: 0.3 }}
+                    >
+                        <Link 
+                            href="/"
+                            className="text-blue-400 hover:text-blue-300 transition-colors duration-200"
+                        >
+                            Return to main page
+                        </Link>
+                    </motion.div>
                 </motion.div>
+
             )
         },
         // Screen 2: Study Information
